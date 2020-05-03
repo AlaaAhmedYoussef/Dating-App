@@ -4,53 +4,58 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DatingAPP.API.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace DatingAPP.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        private readonly AppDbContext context;
-
-        public ValuesController(AppDbContext _context)
+        private readonly DataContext _context;
+        public ValuesController(DataContext context)
         {
-            context = _context;
+            _context = context;
         }
 
-        // GET: api/Values
+        // GET api/values
+        //[Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> GetValues()
         {
-            var values = await context.Values.ToListAsync();
+            var values = await _context.Values.ToListAsync();
 
             return Ok(values);
         }
 
-        // GET: api/Values/5
+        // GET api/values/5
+        //[Authorize(Roles = "Member")]
+        [AllowAnonymous]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetValues(int id)
+        public async Task<IActionResult> GetValue(int id)
         {
-            var value = await context.Values.SingleOrDefaultAsync(v => v.Id == id);
+            var value = await _context.Values.FirstOrDefaultAsync(x => x.Id == id);
+
             return Ok(value);
         }
 
-        // POST: api/Values
+        // POST api/values
         [HttpPost]
         public void Post([FromBody] string value)
         {
         }
 
-        // PUT: api/Values/5
+        // PUT api/values/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
-        // DELETE: api/ApiWithActions/5
+        // DELETE api/values/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {

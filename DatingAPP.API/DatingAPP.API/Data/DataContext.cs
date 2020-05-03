@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 
 namespace DatingAPP.API.Data
 {
-    public class AppDbContext : DbContext
+    public class DataContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+        public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
         public virtual DbSet<Value> Values { get; set; }
+        public virtual DbSet<User> Users { get; set; }  
         public virtual DbSet<Xxx> Xxxes { get; set; }
     }
 }
